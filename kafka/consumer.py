@@ -23,4 +23,4 @@ def register_kafka_listener(topic, listener):
 def kafka_listener(data):
     print("Image Ratings:\n", data.value.decode("utf-8"))
 
-register_kafka_listener('Topic1', kafka_listener)
+register_kafka_listener('traffic', kafka_listener)

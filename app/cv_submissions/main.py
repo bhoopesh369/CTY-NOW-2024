@@ -47,11 +47,12 @@ def structed_response_gemini(
     prompt_template_str: str,
     model_name: str = MODEL_NAME,
 ):
+    print("here")
     gemini_llm = GeminiMultiModal(
-        api_key=GOOGLE_API_KEY,
+        api_key="AIzaSyDBQto8ebBKVnsPukmN6E7ELXaaAWCQ64Y",
         model_name=model_name
     )
-
+    print("heer 2")
     llm_program = MultiModalLLMCompletionProgram.from_defaults(
         output_parser=PydanticOutputParser(output_cls=output_class),
         image_documents=image_documents,
@@ -60,11 +61,15 @@ def structed_response_gemini(
         verbose=True
     )
 
+    print("here 3")
+
     response = llm_program()
     return response
 
 
 def get_details_from_multimodal_gemini(uploaded_image):
+    # print(uploaded_image)
+    # print(uploaded_image)
     for image_doc in uploaded_image:
         data_list = []
         structured_response = structed_response_gemini(
@@ -113,13 +118,13 @@ if uploaded_file is not None:
 
         # load images
         images_documents = SimpleDirectoryReader(
-            input_files=["/home/bhoopesh/pathway_realtime_LLM/app/cv_submissions/images/b9fab1c6b8b69a265f8a.png"]).load_data()
+            input_files=["/home/mani1911/Documents/Pragyan-Hack/CTY-NOW-2024/uploads/4c82e5ae1f279cac2b79.png"]).load_data()
         try:
             response = get_details_from_multimodal_gemini(
                 uploaded_image=images_documents)
             
             # store processed information
-            with open("/home/bhoopesh/pathway_realtime_LLM/app/cv_submissions/data/data_store.jsonl", "a") as f:
+            with open("/home/mani1911/Documents/Pragyan-Hack/CTY-NOW-2024/app/cv_submissions/data/data_store.jsonl", "a") as f:
                 f.write(json.dumps({"doc": ', '.join(
                     [f"{key}: {value}" for key, value in response.items()])}) + "\n")
 

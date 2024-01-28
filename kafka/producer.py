@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 
 # Define the Kafka broker(s) and topic
 bootstrap_servers = ['localhost:9092']
-topic = 'Topic1'
+topic = 'traffic'
 
 # Create a Kafka producer instance
 print("Connecting to Kafka...")
