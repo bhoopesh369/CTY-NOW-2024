@@ -8,6 +8,7 @@ import os
 from llama_index import SimpleDirectoryReader
 from PIL import Image
 from app.cv_submissions.main import get_details_from_multimodal_gemini
+from helpers import convertAudioToText
 
 UPLOAD_FOLDER = '/home/mani1911/Documents/Pragyan-Hack/CTY-NOW-2024/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -81,6 +82,41 @@ def uploadFile():
             <input type=submit value=Upload>
             </form>
             '''
+
+@app.route('/voice', methods=['POST', 'GET'])
+def speechToText():
+
+    if request.method == 'POST':
+            # check if the post request has the file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            if not os.path.exists(f"{UPLOAD_FOLDER}/audio"):
+                os.makedirs(f"{UPLOAD_FOLDER}/audio")
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(f"{UPLOAD_FOLDER}/audio", filename))
+
+            text = convertAudioToText(audio_file=os.path.join(f"{UPLOAD_FOLDER}/audio", filename))
+            print(text)
+            return jsonify({"message" : text})
+        
+        return jsonify({"message": "failed"})
+
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+    <input type=file name=file>
+    <input type=submit value=Upload>
+    </form>
+    '''
 
 
 # A method that runs the application server.
